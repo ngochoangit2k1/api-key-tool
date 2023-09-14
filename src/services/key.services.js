@@ -90,3 +90,20 @@ export async function checkKey(keys, res) {
     return res.status(200).json(e);
   }
 }
+
+export async function blockKey(keys, res) {
+  const { key } = keys;
+  const idkey = await Key.findOne({ key: key });
+  if (idkey) {
+    try {
+      await Key.updateOne({ key: key }, { code: "block" });
+
+      const code = await Key.findOne({ key: key }, "code");
+      return res.status(200).json(code);
+    } catch (e) {
+      return res.status(200).json("Không thể khoá");
+    }
+  } else {
+    return res.status(400).json("Không tìm thấy key");
+  }
+}

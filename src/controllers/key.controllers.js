@@ -22,7 +22,10 @@ auth.post("/check-key",checkToken, async (req, res, next) => {
   return checkKey(req.body, res)
     .catch(next);
 });
-
+auth.post("/block-key",checkToken, async (req, res, next) => { 
+  return blockKey(req.body, res)
+    .catch(next);
+});
 export function initWebKeyController(app) {
   app.use("/api/key", auth);
 }
