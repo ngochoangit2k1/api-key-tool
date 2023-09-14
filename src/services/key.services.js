@@ -92,16 +92,29 @@ export async function checkKey(keys, res) {
 }
 
 export async function blockKey(keys, res) {
-  const { key } = keys;
+  const { key, code } = keys;
   const idkey = await Key.findOne({ key: key });
+  console.log(code);
   if (idkey) {
-    try {
-      await Key.updateOne({ key: key }, { code: "block" });
+    if (code === "block") {
+      try {
+        await Key.updateOne({ key: key }, { code: "block" });
 
-      const code = await Key.findOne({ key: key }, "code");
-      return res.status(200).json(code);
-    } catch (e) {
-      return res.status(200).json("Không thể khoá");
+        const code = await Key.findOne({ key: key }, "code");
+        return res.status(200).json(code);
+      } catch (e) {
+        return res.status(200).json("Không thể khoá");
+      }
+    }
+    if (code == "open") {
+      try {
+        await Key.updateOne({ key: key }, { code: "open" });
+
+        const code = await Key.findOne({ key: key }, "code");
+        return res.status(200).json(code);
+      } catch (e) {
+        return res.status(200).json("Không thể mở");
+      }
     }
   } else {
     return res.status(400).json("Không tìm thấy key");
