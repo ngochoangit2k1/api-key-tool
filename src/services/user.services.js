@@ -22,7 +22,7 @@ export async function createUser(newUser, res) {
         username,
         password: hash,
         phone,
-        role: "admin",
+        role: "user",
       });
 
       if (createdUser) {
@@ -37,7 +37,12 @@ export async function createUser(newUser, res) {
 export async function loginUser(userLogin, res) {
   return new Promise(async (resolve, reject) => {
     const { username, password } = userLogin;
-    if (!username || username.length === 0 || !password || password.length === 0) {
+    if (
+      !username ||
+      username.length === 0 ||
+      !password ||
+      password.length === 0
+    ) {
       return res.status(404).send("username or password invalid");
     }
     try {
@@ -69,4 +74,30 @@ export async function loginUser(userLogin, res) {
       return res.status(500).send(e);
     }
   });
+}
+
+export async function getAllUser(req, res) {
+  try {
+    const users = await User.find({});
+    return res.status(200).json(users);
+  } catch (e) {}
+}
+export async function searchUser(req, res) {
+  const {q} = req.query; // Get the search term from the query parameter
+
+  try {
+    
+    const users = await User.find({
+      $or: [
+        { username: { $regex: q, $options: "i" } }, // Case-insensitive username search
+        // Case-insensitive email search
+      ],
+    });
+    if(users){
+      return res.status(200).json(users);
+    }
+    return res.status(400).json("không tìm thấy tài khoảng");
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 }
