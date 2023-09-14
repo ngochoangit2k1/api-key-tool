@@ -26,7 +26,7 @@ auth.post("/block-key",checkToken, async (req, res, next) => {
   return blockKey(req.body, res)
     .catch(next);
 });
-auth.post("/block-key",checkToken, async (req, res, next) => { 
+auth.post("/delete-key",checkToken, async (req, res, next) => { 
   return deletekKey(req.body, res)
     .catch(next);
 });
