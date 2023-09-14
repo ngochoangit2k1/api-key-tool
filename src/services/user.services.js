@@ -5,11 +5,11 @@ import dotenv from "dotenv";
 dotenv.config();
 export async function createUser(newUser, res) {
   return new Promise(async () => {
-    const { name, email, password, phone } = newUser;
+    const { name, username, password, phone } = newUser;
     let t;
     try {
       const checkUser = await User.findOne({
-        email: email,
+        username: username,
       });
       console.log(checkUser);
       if (checkUser) {
@@ -19,7 +19,7 @@ export async function createUser(newUser, res) {
       const hash = bcrypt.hashSync(password, 10);
       const createdUser = await User.create({
         name,
-        email,
+        username,
         password: hash,
         phone,
         role: "user",
@@ -36,13 +36,13 @@ export async function createUser(newUser, res) {
 
 export async function loginUser(userLogin, res) {
   return new Promise(async (resolve, reject) => {
-    const { email, password } = userLogin;
-    if (!email || email.length === 0 || !password || password.length === 0) {
-      return res.status(404).send("Email or password invalid");
+    const { username, password } = userLogin;
+    if (!username || username.length === 0 || !password || password.length === 0) {
+      return res.status(404).send("username or password invalid");
     }
     try {
       const checkUser = await User.findOne({
-        email: email,
+        username: username,
       });
       if (checkUser === null) {
         return res.status(404).send("Người dùng không được xác định!");

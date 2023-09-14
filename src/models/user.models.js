@@ -5,9 +5,8 @@ const UserSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
-    email: {
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -15,14 +14,14 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    role:{
+    role: {
       type: String,
-      enum: ['admin', 'user', 'moderator'],
+      enum: ["admin", "user", "moderator"],
     },
     img: {
       type: String,
     },
-    
+
     fromGoogle: {
       type: Boolean,
       default: false,

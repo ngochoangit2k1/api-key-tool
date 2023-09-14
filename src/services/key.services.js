@@ -13,12 +13,12 @@ function generateVerifyCode() {
 }
 
 export async function createKey(Keydata, res) {
-  const { date, email } = Keydata;
+  const { date, username } = Keydata;
 
   const currentDateTime = new Date();
   const id = await User.findOne(
     {
-      email: email,
+      username: username,
     },
     "_id"
   );
@@ -43,7 +43,7 @@ export async function createKey(Keydata, res) {
 export async function getAllKey(req, res) {
   console.log(req.user.data.role);
   try {
-    const key = await Key.find({}).populate("author", "email");
+    const key = await Key.find({}).populate("author", "username");
 
     return res.status(200).json(key);
   } catch (e) {
@@ -51,19 +51,19 @@ export async function getAllKey(req, res) {
   }
 }
 export async function getKey(query, res) {
-  const { email, key } = query;
+  const { username, key } = query;
   const userIdToFind = await User.findOne(
     {
-      email: email,
+      username: username,
     },
     "_id"
   );
   try {
-    if (email) {
+    if (username) {
       const keys = await Key.find({ author: userIdToFind });
       return res.status(200).json(keys);
     } else {
-      const keys = await Key.find({ key: key }).populate("author", "email");
+      const keys = await Key.find({ key: key }).populate("author", "username");
       return res.status(200).json(keys);
     }
   } catch (e) {
