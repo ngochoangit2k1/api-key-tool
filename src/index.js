@@ -51,8 +51,6 @@ const server = http.createServer(app);
 app.listen(port, async () => {
    connect();
   const PORT = process.env.PORT || appConf.port;
-  server.listen(PORT, appConf.hostname, async () => {
-    console.log(`Server running at http://${appConf.hostname}:${PORT}/`);
-  })
+ 
   console.log(`server listening on port: ${port}`);
 });
