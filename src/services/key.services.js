@@ -22,11 +22,13 @@ export async function createKey(Keydata, res) {
     },
     "_id"
   );
-  console.log(id);
+  if (!id) {
+    return res.status(404).json("user không tồn tại");
+  }
   const expirationDateTime = new Date(
     currentDateTime.getTime() + date * 24 * 60 * 60 * 1000
   );
-  console.log(expirationDateTime);
+
   const key = generateVerifyCode();
   try {
     const createKey = await Key.create({

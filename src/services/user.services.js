@@ -22,7 +22,7 @@ export async function createUser(newUser, res) {
         username,
         password: hash,
         phone,
-        role: "user",
+        role: "admin",
       });
 
       if (createdUser) {
