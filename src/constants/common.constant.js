@@ -1,42 +1,42 @@
-module.exports.FILE_TYPES = [
-    'image/jpeg',
-    'image/gif',
-    'image/png',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'text/csv', 'text/plain',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/pdf'
-];
+// module.exports.FILE_TYPES = [
+//     'image/jpeg',
+//     'image/gif',
+//     'image/png',
+//     'application/vnd.ms-excel',
+//     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//     'text/csv', 'text/plain',
+//     'application/msword',
+//     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+//     'application/pdf'
+// ];
 
-module.exports.VALIDATOR_TYPE = Object.freeze({
-  BODY: 'body',
-  PARAMS: 'params',
-  QUERY: 'query'
-});
+// module.exports.VALIDATOR_TYPE = Object.freeze({
+//   BODY: 'body',
+//   PARAMS: 'params',
+//   QUERY: 'query'
+// });
 
-module.exports.ACTIVE_MAIL_EXPIRED = 60; // 60 minutes
+// module.exports.ACTIVE_MAIL_EXPIRED = 60; // 60 minutes
 
-module.exports.CHANGE_MAIL_EXPIRED = 60; // 60 minutes
+// module.exports.CHANGE_MAIL_EXPIRED = 60; // 60 minutes
 
-module.exports.RESET_PASSWORD_EXPIRED = 30; // 30 minutes
+// module.exports.RESET_PASSWORD_EXPIRED = 30; // 30 minutes
 
-module.exports.S3_FOLDERS = {
-  DEFAULT: 'files'
-};
+// module.exports.S3_FOLDERS = {
+//   DEFAULT: 'files'
+// };
 
-module.exports.DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
+// module.exports.DATE_FORMAT = 'YYYY-MM-DD HH:mm:ssZ';
 
-module.exports.OTP_CODE_LENGTH = 6;
+// module.exports.OTP_CODE_LENGTH = 6;
 
-module.exports.VERIFY_EMAIL_EXPIRED = 60; // 60 SECONDS
+// module.exports.VERIFY_EMAIL_EXPIRED = 60; // 60 SECONDS
 
-module.exports.OTP_CODE_EXPIRED = 60; // 60 seconds
+// module.exports.OTP_CODE_EXPIRED = 60; // 60 seconds
 
-module.exports.MIN_LENGTH_PHONE = 9;
+// module.exports.MIN_LENGTH_PHONE = 9;
 
-module.exports.MAX_LENGTH_PHONE = 20;
+// module.exports.MAX_LENGTH_PHONE = 20;
 
 export const OTP_CODE_TYPE = {
   REGISTER_EMAIL: 'register_email',
@@ -93,8 +93,8 @@ export const SLIDE_PAGE = {
 
 export const ROLE = {
   ADMIN: 1,
-  SALE: 2,
-  USER: 3 
+  USER: 2,
+ 
 };
 
 export const MASTER_DATA_NAME = {
@@ -129,7 +129,3 @@ export const PAYMENT_METHOD_MAP = [
   { value: 1, label: "Thanh toán bằng Momo" },
   { value: 2, label: "Thanh toán bằng VNPay" }
 ];
-export const Role = {
-  USER: 2,
-  ADMIN: 1
-};

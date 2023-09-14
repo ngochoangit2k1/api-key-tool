@@ -19,7 +19,8 @@ auth.post("/register", async (req, res, next) => {
     .then((t) => res.status(HttpStatusCode.OK).json(t))
     .catch(next);
 }); 
-auth.get("/", checkToken, async (req, res, next) => {
+auth.get("/",  async (req, res, next) => {
+  checkToken(req, res, next, [ROLE.ADMIN]);
   return getAllUser(req.body, res)
     .then((t) => res.status(HttpStatusCode.OK).json(t))
     .catch(next);
