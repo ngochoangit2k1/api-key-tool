@@ -62,7 +62,7 @@ export async function getKey(query, res) {
   );
   try {
     if (username) {
-      const keys = await Key.find({ author: userIdToFind });
+      const keys = await Key.find({ author: userIdToFind }).populate("author", "username");
       return res.status(200).json(keys);
     } else {
       const keys = await Key.find({ key: key }).populate("author", "username");
