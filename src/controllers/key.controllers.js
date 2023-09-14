@@ -1,5 +1,5 @@
 import express from "express";
-import { createKey, getAllKey ,getKey, checkKey} from "../services/key.services.js";
+import { createKey, getAllKey ,getKey, checkKey, blockKey} from "../services/key.services.js";
 import checkToken from "../authentication/auth.authentication.js";
 
 const auth = express.Router();
