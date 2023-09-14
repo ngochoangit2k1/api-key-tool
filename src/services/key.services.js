@@ -36,6 +36,7 @@ export async function createKey(Keydata, res) {
       code: "open",
       expirationDate: expirationDateTime,
       author: id,
+      deleteDate: null
     });
     return res.status(200).json(createKey);
   } catch (e) {
@@ -45,7 +46,7 @@ export async function createKey(Keydata, res) {
 export async function getAllKey(req, res) {
   console.log(req.user.data.role);
   try {
-    const key = await Key.find({}).populate("author", "username");
+    const key = await Key.find({"deleteDate": null}).populate("author", "username");
 
     return res.status(200).json(key);
   } catch (e) {
@@ -78,11 +79,11 @@ export async function checkKey(keys, res) {
   try {
     const times = await Key.findOne({ key: key }, "expirationDate");
     const date = times.expirationDate;
-
-    const newDate = new Date();
+    const currentDateTime = new Date();
+    const newDate = new Date(  currentDateTime.getTime() + 5 * 24 * 60 * 60 * 1000);
 
     if (newDate > date) {
-      await Key.updateOne({ key: key }, { code: "block" });
+      await Key.updateOne({ key: key }, { code: "block" , deleteDate: newDate});
     }
     const code = await Key.findOne({ key: key }, "code");
     return res.status(200).json(code);
@@ -90,7 +91,20 @@ export async function checkKey(keys, res) {
     return res.status(200).json(e);
   }
 }
+export async function deletekKey(keys, res) {
+  const { key } = keys;
+  try {
 
+    const newDate = new Date();
+    
+    await Key.updateOne({ key: key }, { code: "block" ,deleteDate: newDate});
+    
+    const code = await Key.findOne({ key: key }, "code");
+    return res.status(200).json(code);
+  } catch (e) {
+    return res.status(200).json(e);
+  }
+}
 export async function blockKey(keys, res) {
   const { key, code } = keys;
   const idkey = await Key.findOne({ key: key });

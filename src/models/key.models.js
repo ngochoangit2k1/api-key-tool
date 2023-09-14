@@ -12,11 +12,12 @@ const KeySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Tham chiếu tới bảng User
     },
+
     code: {
       type: String,
       enum: ["open", "block"],
     },
-    deleteDate: { type: Date },
+    deleteDate: { type: Date, required: false },
   },
   { timestamps: true }
 );

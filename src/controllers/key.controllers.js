@@ -1,5 +1,5 @@
 import express from "express";
-import { createKey, getAllKey ,getKey, checkKey, blockKey} from "../services/key.services.js";
+import { createKey, getAllKey ,getKey, checkKey, blockKey , deletekKey} from "../services/key.services.js";
 import checkToken from "../authentication/auth.authentication.js";
 
 const auth = express.Router();
@@ -24,6 +24,10 @@ auth.post("/check-key",checkToken, async (req, res, next) => {
 });
 auth.post("/block-key",checkToken, async (req, res, next) => { 
   return blockKey(req.body, res)
+    .catch(next);
+});
+auth.post("/block-key",checkToken, async (req, res, next) => { 
+  return deletekKey(req.body, res)
     .catch(next);
 });
 export function initWebKeyController(app) {
