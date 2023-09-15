@@ -97,12 +97,22 @@ export async function searchUser(req, res) {
 
       if (users.length > 0) {
         const usersWithKey = await Promise.all(
-          users.filter(async (user) => {
-         const key = await Key.find({ author: user._id }).populate("author", "username");
-         return key.length > 0
+          users.map(async (user) => {
+            const key = await Key.find({
+              author: user._id,
+              deleteDate: null,
+            }).populate("author", "username");
+            if (key && key.length > 0) {
+              return key;
+            }
           })
         );
-        return res.status(200).json(usersWithKey);
+        //lọc loại bỏ các mảng rỗng
+        const filteredUsersWithKey = usersWithKey.filter((user) => user);
+          // kết nối các mảng con thành 1 mảng duy nhất 
+        const connectedData = [].concat(...filteredUsersWithKey);
+
+        return res.status(200).json(connectedData);
       } else {
         return res.status(404).json("Không tìm thấy tài khoản");
       }
