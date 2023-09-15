@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.models.js";
+import Key from "../models/key.models.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -83,20 +84,26 @@ export async function getAllUser(req, res) {
   } catch (e) {}
 }
 export async function searchUser(req, res) {
-  const {q} = req.query; // Get the search term from the query parameter
+  const { q } = req.query; // Get the search term from the query parameter
 
   try {
-    
     const users = await User.find({
       $or: [
         { username: { $regex: q, $options: "i" } }, // Case-insensitive username search
         // Case-insensitive email search
       ],
     });
-    if(users){
-      return res.status(200).json(users);
+    if (users.length > 0) {
+      const usersWithKey = await Promise.all(
+        users.map(async (user) => {
+          const key = await Key.find({ author: user._id }).populate("author", "username");
+          return { user, key };
+        })
+      );
+      return res.status(200).json(usersWithKey);
+    } else {
+      return res.status(404).json("Không tìm thấy tài khoản");
     }
-    return res.status(400).json("không tìm thấy tài khoảng");
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
