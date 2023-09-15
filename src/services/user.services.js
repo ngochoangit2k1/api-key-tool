@@ -87,22 +87,37 @@ export async function searchUser(req, res) {
   const { q } = req.query; // Get the search term from the query parameter
 
   try {
-    const users = await User.find({
-      $or: [
-        { username: { $regex: q, $options: "i" } }, // Case-insensitive username search
-        // Case-insensitive email search
-      ],
-    });
-    if (users.length > 0) {
-      const usersWithKey = await Promise.all(
-        users.map(async (user) => {
-          const key = await Key.find({ author: user._id }).populate("author", "username");
-          return { user, key };
-        })
-      );
-      return res.status(200).json(usersWithKey);
+    if (q) {
+      const users = await User.find({
+        $or: [
+          { username: { $regex: q, $options: "i" } }, // Case-insensitive username search
+          // Case-insensitive email search
+        ],
+      });
+    const results=  await Key.find({ author: users._id }).populate("author", "username");
+    console.log(results)
+      if (users.length > 0) {
+        const usersWithKey = await Promise.all(
+          users.map(async (user) => {
+         const key = await Key.find({ author: user._id }).populate("author", "username");
+         return key
+          })
+        );
+        return res.status(200).json(usersWithKey);
+      } else {
+        return res.status(404).json("Không tìm thấy tài khoản");
+      }
     } else {
-      return res.status(404).json("Không tìm thấy tài khoản");
+      try {
+        const key = await Key.find({ deleteDate: null }).populate(
+          "author",
+          "username"
+        );
+
+        return res.status(200).json(key);
+      } catch (e) {
+        return res.status(500).json(e);
+      }
     }
   } catch (err) {
     res.status(500).json({ error: "Server error" });

@@ -44,7 +44,6 @@ export async function createKey(Keydata, res) {
   }
 }
 export async function getAllKey(req, res) {
-  console.log(req.user.data.role);
   try {
     const key = await Key.find({"deleteDate": null}).populate("author", "username");
 
