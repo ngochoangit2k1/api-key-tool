@@ -94,13 +94,12 @@ export async function searchUser(req, res) {
           // Case-insensitive email search
         ],
       });
-    const results=  await Key.find({ author: users._id }).populate("author", "username");
-    console.log(results)
+
       if (users.length > 0) {
         const usersWithKey = await Promise.all(
-          users.map(async (user) => {
+          users.filter(async (user) => {
          const key = await Key.find({ author: user._id }).populate("author", "username");
-         return key
+         return key.length > 0
           })
         );
         return res.status(200).json(usersWithKey);
