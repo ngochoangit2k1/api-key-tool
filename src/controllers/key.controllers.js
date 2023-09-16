@@ -6,6 +6,7 @@ import {
   checkKey,
   blockKey,
   deletekKey,
+  checkDayKey
 } from "../services/key.services.js";
 import checkToken from "../authentication/auth.authentication.js";
 import { ROLE } from "../constants/common.constant.js";
@@ -31,6 +32,10 @@ auth.post("/check-key",  async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
   return checkKey(req.body, res).catch(next);
 });
+auth.post("/check-day-key",  async (req, res, next) => {
+  checkToken(req, res, next, [ROLE.ADMIN]);
+  return checkDayKey(req.body, res).catch(next);
+});
 auth.post("/block-key",  async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
   return blockKey(req.body, res).catch(next);
@@ -39,6 +44,7 @@ auth.post("/delete-key",  async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
   return deletekKey(req.body, res).catch(next);
 });
+
 export function initWebKeyController(app) {
   app.use("/api/key", auth);
 }

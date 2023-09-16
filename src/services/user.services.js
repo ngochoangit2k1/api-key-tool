@@ -4,6 +4,8 @@ import Key from "../models/key.models.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
+
+
 export async function createUser(newUser, res) {
   return new Promise(async () => {
     const { name, username, password, phone } = newUser;
@@ -83,6 +85,7 @@ export async function getAllUser(req, res) {
     return res.status(200).json(users);
   } catch (e) {}
 }
+
 export async function searchUser(req, res) {
   const { q } = req.query; // Get the search term from the query parameter
 
@@ -109,7 +112,7 @@ export async function searchUser(req, res) {
         );
         //lọc loại bỏ các mảng rỗng
         const filteredUsersWithKey = usersWithKey.filter((user) => user);
-          // kết nối các mảng con thành 1 mảng duy nhất 
+        // kết nối các mảng con thành 1 mảng duy nhất
         const connectedData = [].concat(...filteredUsersWithKey);
 
         return res.status(200).json(connectedData);

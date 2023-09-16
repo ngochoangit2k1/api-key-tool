@@ -78,14 +78,34 @@ export async function checkKey(keys, res) {
   try {
     const times = await Key.findOne({ key: key }, "expirationDate");
     const date = times.expirationDate;
-    const currentDateTime = new Date();
-    const newDate = new Date(  currentDateTime.getTime() + 5 * 24 * 60 * 60 * 1000);
+    const newDate = new Date( );
 
     if (newDate > date) {
       await Key.updateOne({ key: key }, { code: "block" , deleteDate: newDate});
     }
     const code = await Key.findOne({ key: key }, "code");
     return res.status(200).json(code);
+  } catch (e) {
+    return res.status(200).json(e);
+  }
+}
+
+export async function checkDayKey(keys, res) {
+  const { key } = keys;
+  try {
+
+    const times = await Key.findOne({ key: key,  deleteDate: null });
+    if(times){  const date = times.expirationDate;
+    const newDate = new Date( );
+    const check = date - newDate;
+    console.log("test",  Math.floor((check / (1000 * 60 * 60 * 24)) +1))
+      const remainingDays = Math.floor((check / (1000 * 60 * 60 * 24)) +1)
+    
+    return res.status(200).json({remainingDays :remainingDays});}
+    else{
+      return res.status(200).json({message: "tài khoản bạn đã hết hạn"})
+    }
+  
   } catch (e) {
     return res.status(200).json(e);
   }

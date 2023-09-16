@@ -35,11 +35,10 @@ export default async function checkToken(req, res, next, moduleId = []) {
 }
 async function isAuthenticated(req, res, next, moduleId) {
   const role = req.user.data.role;
-  console.log(role);
-  console.log(moduleId[0]);
+
   if (req.user) {
     const user = req.user.data.username;
-    console.log(user);
+    
     const account = await User.findOne({
       username: user,
     });
