@@ -96,10 +96,19 @@ export async function checkKey(keys, res) {
   }
 }
 
-export async function checkDayKey(keys, res) {
-  const { key } = keys;
+export async function checkDayKey(req, res, next) {
+  const { key } = req.body;
   const checkKey = await Key.findOne({ key: key });
+  const objectIdString = req.user.data._id;
+  const targetValue = checkKey.author.toString();
 
+  const role = req.user.data.role;
+
+  if (objectIdString === targetValue || role === "admin") {
+    next;
+  } else {
+    return res.status(400).json("bạn không phải chủ tài khoản key");
+  }
   if (checkKey) {
     const date = checkKey.expirationDate;
     const newDate = new Date();
@@ -128,7 +137,6 @@ export async function checkDayKey(keys, res) {
     return res.status(40).json({ message: "key không tồn tại" });
   }
 }
-
 
 export async function deletekKey(keys, res) {
   const { key } = keys;
