@@ -110,12 +110,14 @@ export async function checkDayKey(req, res, next) {
     return res.status(400).json("bạn không phải chủ tài khoản key");
   }
   if (checkKey) {
-    const date = checkKey.expirationDate;
+    const date =  new Date(checkKey.expirationDate.toISOString() ) ;
+ 
     const newDate = new Date();
-    if (newDate > date) {
+
+    if (newDate > date ) {
       await Key.updateOne({ key: key }, { code: "block", deleteDate: newDate });
     }
-    const times = await Key.findOne({ key: key, deleteDate: null });
+    const times = await Key.findOne({ key: key });
     try {
       if (times) {
         if (times.code === "block") {
@@ -124,6 +126,7 @@ export async function checkDayKey(req, res, next) {
             .json({ message: "Key của bạn đã bị khoá liên hệ admin mở lại" });
         }
         const check = date - newDate;
+       
         const remainingDays = Math.floor(check / (1000 * 60 * 60 * 24) + 1);
 
         return res.status(200).json({ remainingDays: remainingDays });
