@@ -33,7 +33,7 @@ auth.post("/check-key",  async (req, res, next) => {
   return checkKey(req.body, res).catch(next);
 });
 auth.post("/check-day-key",  async (req, res, next) => {
-  checkToken(req, res, next, [ROLE.ADMIN]);
+  checkToken(req, res, next, [ROLE.USER]);
   return checkDayKey(req.body, res).catch(next);
 });
 auth.post("/block-key",  async (req, res, next) => {
