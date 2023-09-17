@@ -8,6 +8,7 @@ import { initApiController } from "./controllers/index.js";
 import { FormError, isSystemError } from "./errors/error.js";
 import bodyParser from "body-parser";
 import appConf from './config/application.js';
+import {autoCheckKey} from "./services/key.services.js"
 const app = express();
 app.use(cors());
 dotenv.config();
@@ -48,8 +49,8 @@ const connect = () => {
     });
 };
 const server = http.createServer(app);
-app.listen(port, async () => {
-   connect();
+app.listen(port,autoCheckKey, async () => {
+  connect();
   const PORT = process.env.PORT || appConf.port;
  
   console.log(`server listening on port: ${port}`);

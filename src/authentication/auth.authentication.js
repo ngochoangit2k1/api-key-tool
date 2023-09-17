@@ -13,10 +13,14 @@ export default async function checkToken(req, res, next, moduleId = []) {
 
     const isExpired = Date.now() >= jwtObject.exp * 1000;
     if (isExpired) {
-      res.results(HttpStatusCode.BAD_REQUEST).json({
-        message: "Token is expired",
-      });
-      res.end();
+      const genneralRefreshToken = async (payload) => {
+        const refresh_token = jwt.sign(
+          { ...payload },
+          process.env.REFRESH_TOKEN,
+          { expiresIn: "90d" }
+        );
+        return refresh_token;
+      };
     } else {
       req.user = jwtObject;
 
@@ -38,11 +42,11 @@ async function isAuthenticated(req, res, next, moduleId) {
 
   if (req.user) {
     const user = req.user.data.username;
-    
+
     const account = await User.findOne({
       username: user,
     });
-  
+
     if (!account) {
       return res.status(400).json({
         message: "Account not found",
@@ -62,3 +66,5 @@ async function isAuthenticated(req, res, next, moduleId) {
     });
   }
 }
+
+

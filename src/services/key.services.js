@@ -1,6 +1,7 @@
 import randomstring from "randomstring";
 import Key from "../models/key.models.js";
 import User from "../models/user.models.js";
+import cron from "node-cron";
 
 function generateVerifyCode() {
   return randomstring
@@ -110,11 +111,11 @@ export async function checkDayKey(req, res, next) {
     return res.status(400).json("bạn không phải chủ tài khoản key");
   }
   if (checkKey) {
-    const date =  new Date(checkKey.expirationDate.toISOString() ) ;
- 
+    const date = new Date(checkKey.expirationDate.toISOString());
+
     const newDate = new Date();
 
-    if (newDate > date ) {
+    if (newDate > date) {
       await Key.updateOne({ key: key }, { code: "block", deleteDate: newDate });
     }
     const times = await Key.findOne({ key: key });
@@ -126,7 +127,7 @@ export async function checkDayKey(req, res, next) {
             .json({ message: "Key của bạn đã bị khoá liên hệ admin mở lại" });
         }
         const check = date - newDate;
-       
+
         const remainingDays = Math.floor(check / (1000 * 60 * 60 * 24) + 1);
 
         return res.status(200).json({ remainingDays: remainingDays });
@@ -182,4 +183,29 @@ export async function blockKey(keys, res) {
   } else {
     return res.status(400).json("Không tìm thấy key");
   }
+}
+export  async function autoCheckKey(req, res) {
+  cron.schedule("0 0 * * *", async () => {
+    try {
+      const newDate = new Date();
+      const keys = await Key.find({ deleteDate: null });
+      const usersWithKey = await Promise.all(
+        keys.map(async (key) => {
+          const date = new Date(key.expirationDate.toISOString());
+          if (newDate > date) {
+            const autoCheck = await Key.updateOne(
+              { key: key },
+              { code: "block", deleteDate: newDate }
+            );
+            return autoCheck;
+          }
+        })
+      );
+      console.log("User accounts updated.");
+
+      return usersWithKey
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  });
 }
