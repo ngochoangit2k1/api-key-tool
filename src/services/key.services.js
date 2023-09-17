@@ -36,7 +36,7 @@ export async function createKey(Keydata, res) {
       code: "open",
       expirationDate: expirationDateTime,
       author: id,
-      deleteDate: null
+      deleteDate: null,
     });
     return res.status(200).json(createKey);
   } catch (e) {
@@ -45,7 +45,10 @@ export async function createKey(Keydata, res) {
 }
 export async function getAllKey(req, res) {
   try {
-    const key = await Key.find({"deleteDate": null}).populate("author", "username");
+    const key = await Key.find({ deleteDate: null }).populate(
+      "author",
+      "username"
+    );
 
     return res.status(200).json(key);
   } catch (e) {
@@ -62,7 +65,10 @@ export async function getKey(query, res) {
   );
   try {
     if (username) {
-      const keys = await Key.find({ author: userIdToFind }).populate("author", "username");
+      const keys = await Key.find({ author: userIdToFind }).populate(
+        "author",
+        "username"
+      );
       return res.status(200).json(keys);
     } else {
       const keys = await Key.find({ key: key }).populate("author", "username");
@@ -78,10 +84,10 @@ export async function checkKey(keys, res) {
   try {
     const times = await Key.findOne({ key: key }, "expirationDate");
     const date = times.expirationDate;
-    const newDate = new Date( );
+    const newDate = new Date();
 
     if (newDate > date) {
-      await Key.updateOne({ key: key }, { code: "block" , deleteDate: newDate});
+      await Key.updateOne({ key: key }, { code: "block", deleteDate: newDate });
     }
     const code = await Key.findOne({ key: key }, "code");
     return res.status(200).json(code);
@@ -92,32 +98,43 @@ export async function checkKey(keys, res) {
 
 export async function checkDayKey(keys, res) {
   const { key } = keys;
-  try {
+  const checkKey = await Key.findOne({ key: key });
 
-    const times = await Key.findOne({ key: key,  deleteDate: null });
-    if(times){  const date = times.expirationDate;
-    const newDate = new Date( );
-    const check = date - newDate;
-    console.log("test",  Math.floor((check / (1000 * 60 * 60 * 24)) +1))
-      const remainingDays = Math.floor((check / (1000 * 60 * 60 * 24)) +1)
-    
-    return res.status(200).json({remainingDays :remainingDays});}
-    else{
-      return res.status(200).json({message: "tài khoản bạn đã hết hạn"})
+  if (checkKey) {
+    const date = checkKey.expirationDate;
+    const newDate = new Date();
+    if (newDate > date) {
+      await Key.updateOne({ key: key }, { code: "block", deleteDate: newDate });
     }
-  
-  } catch (e) {
-    return res.status(200).json(e);
+    const times = await Key.findOne({ key: key, deleteDate: null });
+    try {
+      if (times) {
+        if (times.code === "block") {
+          return res
+            .status(200)
+            .json({ message: "Key của bạn đã bị khoá liên hệ admin mở lại" });
+        }
+        const check = date - newDate;
+        const remainingDays = Math.floor(check / (1000 * 60 * 60 * 24) + 1);
+
+        return res.status(200).json({ remainingDays: remainingDays });
+      } else {
+        return res.status(200).json({ message: "tài khoản bạn đã hết hạn" });
+      }
+    } catch (e) {
+      return res.status(200).json(e);
+    }
+  } else {
+    return res.status(40).json({ message: "key không tồn tại" });
   }
 }
 export async function deletekKey(keys, res) {
   const { key } = keys;
   try {
-
     const newDate = new Date();
-    
-    await Key.updateOne({ key: key }, { code: "block" ,deleteDate: newDate});
-    
+
+    await Key.updateOne({ key: key }, { code: "block", deleteDate: newDate });
+
     const code = await Key.findOne({ key: key }, "code");
     return res.status(200).json(code);
   } catch (e) {
@@ -127,7 +144,7 @@ export async function deletekKey(keys, res) {
 export async function blockKey(keys, res) {
   const { key, code } = keys;
   const idkey = await Key.findOne({ key: key });
-  console.log(code);
+
   if (idkey) {
     if (code === "block") {
       try {

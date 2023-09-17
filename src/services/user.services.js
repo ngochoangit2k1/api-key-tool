@@ -14,7 +14,7 @@ export async function createUser(newUser, res) {
       const checkUser = await User.findOne({
         username: username,
       });
-      console.log(checkUser);
+    
       if (checkUser) {
         return res.status(400).json("tai khoan da ton tai");
       }

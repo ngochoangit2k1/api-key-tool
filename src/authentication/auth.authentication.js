@@ -42,7 +42,7 @@ async function isAuthenticated(req, res, next, moduleId) {
     const account = await User.findOne({
       username: user,
     });
-    console.log(account);
+  
     if (!account) {
       return res.status(400).json({
         message: "Account not found",
