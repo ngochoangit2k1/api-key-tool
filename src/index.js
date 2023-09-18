@@ -49,7 +49,7 @@ const connect = () => {
     });
 };
 const server = http.createServer(app);
-app.listen(port,autoCheckKey, async () => {
+app.listen(port, async () => {
   connect();
   const PORT = process.env.PORT || appConf.port;
  
