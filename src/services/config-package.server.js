@@ -2,12 +2,18 @@ import ConfigPackage from "../models/config-package.model.js";
 
 export async function createPackage(Keydata, res, next) {
   const { title, price, content, url_tele } = Keydata;
+  const config = await ConfigPackage.findOne({ title });
+  if (config) {
+    return res.status(400).json({ error: "title đã tồn tại" });
+  }
   const count = await ConfigPackage.countDocuments({});
   if (count < 5) {
     next;
     // Thực hiện hành động tại đây
   } else {
-    return res.status(500).json("số lượng dữ liệu lớn hơn 5 không thể tạo thêm");
+    return res
+      .status(500)
+      .json("số lượng dữ liệu lớn hơn 5 không thể tạo thêm");
   }
   try {
     const create = await ConfigPackage.create({
@@ -64,14 +70,11 @@ export async function updateConfig(data, res, next) {
   }
 }
 
-export async function getConfig(req, res){
-  
-  try{
-    const config = await ConfigPackage.find({})
-    return res.status(200).json(config)
-  }
-  catch(err){
-    return res.status(400).json(err)
-
+export async function getConfig(req, res) {
+  try {
+    const config = await ConfigPackage.find({});
+    return res.status(200).json(config);
+  } catch (err) {
+    return res.status(400).json(err);
   }
 }

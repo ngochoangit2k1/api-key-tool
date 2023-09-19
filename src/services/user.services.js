@@ -135,3 +135,27 @@ export async function searchUser(req, res) {
     res.status(500).json({ error: "Server error" });
   }
 }
+
+export async function getAllUserInfo(req, res, next) {
+  const { q } = req.query;
+  if(q){ try {
+    const users = await User.find({
+      $or: [
+        { username: { $regex: q, $options: "i" } , role: "user"}, // Case-insensitive username search
+        // Case-insensitive email search
+      ],
+    });
+    return res.status(200).json(users)
+  }
+  catch(err) {
+    return res.status(500).json({ error: err})
+  }}else{
+    try {
+      const users = await User.find({ role: "user"});
+      return res.status(200).json(users);
+    } catch(err) {
+      return res.status(500).json({ error: err})
+    }
+  }
+ 
+}

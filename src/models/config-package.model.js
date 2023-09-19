@@ -9,7 +9,7 @@ const ConfigPackageSchema = new mongoose.Schema(
     },
     price: { type: Number },
     content: {
-      type: String,
+      type: [String],
     },
 
     url_tele: {

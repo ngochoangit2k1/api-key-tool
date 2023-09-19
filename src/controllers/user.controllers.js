@@ -3,9 +3,12 @@ import {
   createUser,
   loginUser,
   getAllUser,
-  searchUser
+  searchUser,
+  getAllUserInfo
 } from "../services/user.services.js";
 import checkToken from "../authentication/auth.authentication.js";
+import { ROLE } from "../constants/common.constant.js";
+
 
 const auth = express.Router();
 auth.post("/sign-in", async (req, res, next) => {
@@ -22,6 +25,12 @@ auth.post("/register", async (req, res, next) => {
 auth.get("/",  async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
   return getAllUser(req.body, res)
+    .then((t) => res.status(HttpStatusCode.OK).json(t))
+    .catch(next);
+}); 
+auth.get("/info",  async (req, res, next) => {
+  checkToken(req, res, next, [ROLE.ADMIN]);
+  return getAllUserInfo(req, res)
     .then((t) => res.status(HttpStatusCode.OK).json(t))
     .catch(next);
 }); 
