@@ -48,7 +48,6 @@ const connect = () => {
       throw err;
     });
 };
-const server = http.createServer(app);
 app.listen(port, async () => {
   connect();
   const PORT = process.env.PORT || appConf.port;
