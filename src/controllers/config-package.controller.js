@@ -11,7 +11,7 @@ const packagePrice = express.Router();
 
 packagePrice.get("/", async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
-  return getConfig(req.body, res, next).catch(next);
+  return getConfig(req, res, next).catch(next);
 });
 packagePrice.post("/create", async (req, res, next) => {
   checkToken(req, res, next, [ROLE.ADMIN]);
