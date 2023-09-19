@@ -30,17 +30,8 @@ export async function createPackage(Keydata, res, next) {
 
 export async function updateConfig(data, res, next) {
   const { title, price, content, url_tele, newtitle } = data;
-  if (
-    !title ||
-    title.length === 0 ||
-    !price ||
-    price.length === 0 ||
-    !content ||
-    content.length === 0 ||
-    !url_tele ||
-    url_tele.length === 0
-  ) {
-    return res.status(400).json({ error: "bạn chưa nhập đủ các trường" });
+  if (!title || title.length === 0) {
+    return res.status(400).json({ error: "Bạn chưa nhâp title" });
   }
   let newTitle;
   if (newtitle.length === 0) {
@@ -53,15 +44,20 @@ export async function updateConfig(data, res, next) {
   if (newtitle && newtitle != title) {
     const Title = await ConfigPackage.findOne({ title: newtitle });
     if (Title) {
-      return res.status(400).json({ error: "newtitle trùng với congfig khác" });
+      return res.status(400).json({ error: "newtitle trùng với congfig khác" }); 
     } else {
-      next;
+      next;  
     }
   }
   if (config) {
     await ConfigPackage.updateOne(
       { _id: config._id },
-      { title: newTitle, price, content, url_tele }
+      {
+        title: newTitle,
+        price: price || config.price,
+        content: content || config.content,
+        url_tele: url_tele || config.url_tele,
+      }
     );
     const configx = await ConfigPackage.findOne({ _id: config._id });
     return res.status(200).json(configx);
