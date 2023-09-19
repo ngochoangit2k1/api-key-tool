@@ -4,11 +4,10 @@ export async function createPackage(Keydata, res, next) {
   const { title, price, content, url_tele } = Keydata;
   const count = await ConfigPackage.countDocuments({});
   if (count < 5) {
-    console.log("Số lượng dữ liệu lớn hơn 5, thực hiện hành động...");
     next;
     // Thực hiện hành động tại đây
   } else {
-    return res.status(500).json("số lượng dữ liệu lớn hơn 5");
+    return res.status(500).json("số lượng dữ liệu lớn hơn 5 không thể tạo thêm");
   }
 
   try {
