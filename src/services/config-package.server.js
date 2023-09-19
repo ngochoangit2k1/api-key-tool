@@ -9,7 +9,6 @@ export async function createPackage(Keydata, res, next) {
   } else {
     return res.status(500).json("số lượng dữ liệu lớn hơn 5 không thể tạo thêm");
   }
-
   try {
     const create = await ConfigPackage.create({
       title,
@@ -62,5 +61,17 @@ export async function updateConfig(data, res, next) {
     return res.status(200).json(configx);
   } else {
     res.status(404).json({ error: "Not Found" });
+  }
+}
+
+export async function getConfig(req, res){
+  
+  try{
+    const config = await ConfigPackage.find({})
+    return res.status(200).json(config)
+  }
+  catch(err){
+    return res.status(400).json(err)
+
   }
 }
