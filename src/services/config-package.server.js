@@ -71,10 +71,25 @@ export async function updateConfig(data, res, next) {
 }
 
 export async function getConfig(req, res) {
-  try {
-    const config = await ConfigPackage.find({});
-    return res.status(200).json(config);
-  } catch (err) {
-    return res.status(400).json(err);
+  const { q } = req.query;
+  if (q) {
+    try {
+      const config = await ConfigPackage.find({
+        $or: [
+          { title: { $regex: q, $options: "i" } }, // Case-insensitive username search
+          // Case-insensitive email search
+        ],
+      });
+      return res.status(200).json(config);
+    } catch (e) {
+      return res.status(400).json({ error: e });
+    }
+  } else {
+    try {
+      const config = await ConfigPackage.find({});
+      return res.status(200).json(config);
+    } catch (err) {
+      return res.status(400).json(err);
+    }
   }
 }

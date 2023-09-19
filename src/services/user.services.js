@@ -159,3 +159,8 @@ export async function getAllUserInfo(req, res, next) {
   }
  
 }
+
+export async function updateUser(user, res, next) {
+  const { name,  password, phone } = user;
+  
+}

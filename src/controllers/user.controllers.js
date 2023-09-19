@@ -4,7 +4,8 @@ import {
   loginUser,
   getAllUser,
   searchUser,
-  getAllUserInfo
+  getAllUserInfo,
+  updateUser
 } from "../services/user.services.js";
 import checkToken from "../authentication/auth.authentication.js";
 import { ROLE } from "../constants/common.constant.js";
@@ -39,6 +40,12 @@ auth.get("/search",  async (req, res, next) => {
     .then((t) => res.status(HttpStatusCode.OK).json(t))
     .catch(next);
 });
+auth.post("/update", async (req, res, next) => {
+  return updateUser(req.body, res)
+    .then((resp) => res.status(200).json(resp))
+    .catch(next);
+});
+
 export function initWebUserController(app) {
   app.use("/api/user/auth", auth);
 }
