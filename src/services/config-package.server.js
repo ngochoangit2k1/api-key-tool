@@ -48,7 +48,7 @@ export async function updateConfig(data, res, next) {
     } else {
       next;  
     }
-  }
+  } 
   if (config) {
     await ConfigPackage.updateOne(
       { _id: config._id },

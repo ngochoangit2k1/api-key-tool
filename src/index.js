@@ -48,9 +48,9 @@ const connect = () => {
       throw err;
     });
 };
-app.listen(port, async () => {
-  connect();
-  const PORT = process.env.PORT || appConf.port;
+// app.listen(port, async () => {
+//   connect();
+//   const PORT = process.env.PORT || appConf.port;
  
-  console.log(`server listening on port: ${port}`);
-});
+//   console.log(`server listening on port: ${port}`);
+// });
