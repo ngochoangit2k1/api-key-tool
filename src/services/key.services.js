@@ -56,6 +56,8 @@ export async function getAllKey(req, res) {
     return res.status(500).json(e);
   }
 }
+
+
 export async function getKey(query, res) {
   const { username, key } = query;
   const userIdToFind = await User.findOne(

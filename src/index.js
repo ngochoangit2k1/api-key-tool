@@ -9,6 +9,8 @@ import { FormError, isSystemError } from "./errors/error.js";
 import bodyParser from "body-parser";
 import appConf from "./config/application.js";
 import { autoCheckKey } from "./services/key.services.js";
+
+
 const app = express();
 app.use(cors());
 dotenv.config();

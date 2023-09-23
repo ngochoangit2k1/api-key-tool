@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-
 export async function createUser(newUser, res) {
   return new Promise(async () => {
     const { name, username, password, phone } = newUser;
@@ -14,7 +13,7 @@ export async function createUser(newUser, res) {
       const checkUser = await User.findOne({
         username: username,
       });
-    
+
       if (checkUser) {
         return res.status(400).json("tai khoan da ton tai");
       }
@@ -121,12 +120,33 @@ export async function searchUser(req, res) {
       }
     } else {
       try {
-        const key = await Key.find({ deleteDate: null }).populate(
+        const newDate = new Date();
+        const keys = await Key.find({ deleteDate: null });
+    
+        
+        if (keys) {
+          await Promise.all(
+            keys.map(async (key) => {
+              const date = new Date(key.expirationDate.toISOString());
+             
+              console.log(key.key)
+              if (newDate > date) {
+                const autoCheck = await Key.updateOne(
+                  { key: key.key },
+                  { code: "block", deleteDate: newDate }
+                );
+                return autoCheck;
+              }
+            })
+          );
+        }
+
+        const keyxs = await Key.find({ deleteDate: null }).populate(
           "author",
           "username"
         );
-
-        return res.status(200).json(key);
+          console.log(keyxs)
+        return res.status(200).json(keyxs);
       } catch (e) {
         return res.status(500).json(e);
       }
@@ -138,29 +158,28 @@ export async function searchUser(req, res) {
 
 export async function getAllUserInfo(req, res, next) {
   const { q } = req.query;
-  if(q){ try {
-    const users = await User.find({
-      $or: [
-        { username: { $regex: q, $options: "i" } , role: "user"}, // Case-insensitive username search
-        // Case-insensitive email search
-      ],
-    });
-    return res.status(200).json(users)
-  }
-  catch(err) {
-    return res.status(500).json({ error: err})
-  }}else{
+  if (q) {
     try {
-      const users = await User.find({ role: "user"});
+      const users = await User.find({
+        $or: [
+          { username: { $regex: q, $options: "i" }, role: "user" }, // Case-insensitive username search
+          // Case-insensitive email search
+        ],
+      });
       return res.status(200).json(users);
-    } catch(err) {
-      return res.status(500).json({ error: err})
+    } catch (err) {
+      return res.status(500).json({ error: err });
+    }
+  } else {
+    try {
+      const users = await User.find({ role: "user" });
+      return res.status(200).json(users);
+    } catch (err) {
+      return res.status(500).json({ error: err });
     }
   }
- 
 }
 
 export async function updateUser(user, res, next) {
-  const { name,  password, phone } = user;
-  
+  const { name, password, phone } = user;
 }
