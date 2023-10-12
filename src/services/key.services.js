@@ -37,6 +37,7 @@ export async function createKey(Keydata, res) {
       code: "open",
       expirationDate: expirationDateTime,
       author: id,
+      ip:"",
       deleteDate: null,
     });
     return res.status(200).json(createKey);
@@ -104,9 +105,16 @@ export async function checkDayKey(req, res, next) {
   const checkKey = await Key.findOne({ key: key });
   const objectIdString = req.user.data._id;
   const targetValue = checkKey.author.toString();
-
+  const userIP = req.ip;
   const role = req.user.data.role;
+  if(checkKey.ip === "" ){
+    await Key.updateOne({ key: key },{ip: userIP})
+  }else if(checkKey.ip === userIP){
+    next
+  }else{
+    return res.status(400).json("thiết bị không đúng");
 
+  }
   if (objectIdString === targetValue || role === "admin") {
     next;
   } else {

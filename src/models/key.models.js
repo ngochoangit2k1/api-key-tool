@@ -12,7 +12,9 @@ const KeySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Tham chiếu tới bảng User
     },
-
+    ip: {
+      type: String,
+    },
     code: {
       type: String,
       enum: ["open", "block"],
