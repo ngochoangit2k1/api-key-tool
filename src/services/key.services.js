@@ -113,14 +113,14 @@ export async function checkDayKey(req, res, next) {
   const ipAddress = ip.address();
 
 
-  if(checkKey.ip === "" ){
-    await Key.updateOne({ key: key },{ip: ipAddress})
-  }else if(checkKey.ip === ipAddress){
-    next
-  }else{
-    return res.status(400).json("thiết bị không đúng");
+  // if(checkKey.ip === "" ){
+  //   await Key.updateOne({ key: key },{ip: ipAddress})
+  // }else if(checkKey.ip === ipAddress){
+  //   next
+  // }else{
+  //   return res.status(400).json("thiết bị không đúng");
 
-  }
+  // }
   if (objectIdString === targetValue || role === "admin") {
     next;
   } else {
